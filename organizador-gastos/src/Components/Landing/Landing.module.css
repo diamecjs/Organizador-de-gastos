@@ -1,3 +1,109 @@
-.landing-container{
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+
+.landing-container {
     background-color: rgb(86, 0, 167);
+    margin-top: -4%;
+    height: auto;
+}
+
+.h1-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 70px;
+    margin-left: 5%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 6%;
+    margin-top: -5%;
+}
+
+.button-container button {
+    font-family: 'Kanit', sans-serif;
+    border-radius: 20px;
+    border: 2px solid rgba(122, 215, 255, 0.84);
+    background: transparent;
+    width: 15%;
+    height: 6vh;
+    font-size: 20px;
+    color: white;
+    transition: background-color 0.3s ease; /* Agrega una transición suave al color de fondo */
+}
+
+.button-container button:hover {
+    background-color: rgba(122, 215, 255, 0.84); /* Cambia el color de fondo en hover */
+    color: black; /* Cambia el color del texto en hover */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+
+.chanchita-container{
+    display: flex;
+    justify-content: center;
+    margin-right: 5%;
+    margin-top:-5%;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-5deg); }
+    50% { transform: translateX(5px) rotate(5deg); }
+    75% { transform: translateX(-5px) rotate(-5deg); }
+    100% { transform: translateX(0); }
+}
+
+.shake:hover {
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+
+.h3-container{
+    display: flex;
+    justify-content: center;
+    margin-top:-5%;
+}
+
+.h3-container h3{
+    font-family: 'Amatic SC', sans-serif;
+    color: rgba(198, 223, 235, 0.84);
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.image-container{
+    margin-top: -5%;
+}
+
+.texto-container{
+margin-top: -25%;
+}
+
+.texto-container h5{
+    display: flex;
+    justify-content: center;
+    font-family: 'Prompt', sans-serif;
+    font-size: 15px;
+    color: black;
+}
+
+.texto2-container{
+    margin-top: 5%;
+}
+
+.texto2-container h5{
+    display: flex;
+    justify-content: end;
+    margin-right: 5%;
+    font-family: 'Prompt', sans-serif;
+    font-size: 15px;
+    color: black;
 }
