@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import Styles from "./Landing.module.css"
 
-
 function Landing() {
 
     return (
