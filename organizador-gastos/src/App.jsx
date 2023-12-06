@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Landing from "./Components/Landing/Landing";
+import Landing from "./Components/Landing/Landing"
+import Footer from "./Components/Footer/Footer";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
           <Route path="/" element={<Landing />} />
         </Routes>
       </Router>
+      <Footer />
     </>
   );
 }
