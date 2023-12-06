@@ -1,4 +1,8 @@
+/* eslint-disable no-undef */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-vars */
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Styles from "./Landing.module.css"
 
 function Landing() {
@@ -10,8 +14,10 @@ function Landing() {
             <h1 className={Styles["h1-title"]}>Organizate !</h1>
             </div>
             <div className={Styles["button-container"]}>
-                <button>Ingresar</button>
-                <button>Registrarse</button>
+               <Link to='/login'> 
+               <button>Ingresar</button> 
+               </Link>
+                {/* <button>Registrarse</button> */}
             </div>
             <div className={Styles["chanchita-container"]}>
                 <img src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1701614580/descarga-removebg-preview_bz3uox.png" alt="chanchita" className={Styles.shake} />
