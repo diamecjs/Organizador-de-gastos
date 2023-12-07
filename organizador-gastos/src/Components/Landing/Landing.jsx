@@ -27,7 +27,7 @@ function Landing() {
             <img src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1701614580/descarga-removebg-preview_bz3uox.png" alt="chanchita" className={Styles.shake} />
 
             <div className="w-full lg:w-1/2 flex flex-col items-center justify-center lg:px-2 xl:px-0 text-center">
-                <p className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider text-violet-500">Organizate!</p>
+                <p className="text-5xl md:text-8xl lg:text-9xl font-bold tracking-wider text-violet-500">Organizate!</p>
                 <p className="text-1xl md:text-2xl lg:text-3xl font-bold tracking-wider text-stone-200 mt-2">
                     Transforma tu vida con Organizate! Tu compañero todo en uno para organizar tareas y gastos.
                 </p>
