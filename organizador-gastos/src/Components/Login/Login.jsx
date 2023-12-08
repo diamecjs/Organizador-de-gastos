@@ -90,11 +90,11 @@ function Login() {
     //     </button>
     //   </h4>
     // </div>
-    <div class="bg-gray-100 flex justify-center items-center h-screen">
+    <div class="bg-white flex justify-center items-center h-screen">
       <div class="w-5/6 h-screen hidden lg:block">
-        <img src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1701909478/Dise%C3%B1o_sin_t%C3%ADtulo_4_uj1kwd.png" alt="Placeholder Image" class="object-contain w-5/6 h-full" />
+        <img src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1701960974/Dise%C3%B1o_sin_t%C3%ADtulo__4_-removebg-preview_swsmwt.png" alt="Placeholder Image" class="object-contain w-5/6 h-full" />
       </div>
-      <div onSubmit={funcAtentication} class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+      <div onSubmit={funcAtentication} class="lg:p-36 md:p-52 sm:20 p-8 w-96 lg:w-1/2">
         <h1 class="text-2xl font-semibold mb-4">Login</h1>
         <form onSubmit={funcAtentication}>
           <div class="mb-4">
@@ -116,13 +116,13 @@ function Login() {
             <a href="#" class="hover:underline"></a>
           </div>
           {register ? "Registrate" :
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
+            <button type="submit" class="bg-purple-950 hover:bg-purple-500 text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
           }
         </form>
 
         <div class="mt-6 text-blue-500 text-center">
           {register ? "Inicia sesión" :
-            <button onClick={() => setRegister(!register)} class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"> Registrate</button>
+            <button onClick={() => setRegister(!register)} class="bg-purple-950 hover:bg-purple-500 text-white font-semibold rounded-md py-2 px-4 w-full"> Registrate</button>
           }
         </div>
       </div>
