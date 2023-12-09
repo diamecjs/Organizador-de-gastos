@@ -91,7 +91,7 @@ function Login() {
     //   </h4>
     // </div>
     <div class="bg-violet-500 flex justify-center items-center h-screen">
-      <div class="w-5/6 h-96 hidden lg:block">
+      <div class="w-5/6 h-96 hidden lg:block" >
         <img src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1702131659/Dise%C3%B1o_sin_t%C3%ADtulo__6_-removebg-preview_wqujtb.png" alt="Placeholder Image" class="object-contain w-5/6 h-full" />
       </div>
       <div onSubmit={funcAtentication} class="lg:p-36 md:p-52 sm:20 p-8 w-96 lg:w-1/2">
