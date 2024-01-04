@@ -16,8 +16,8 @@ function App() {
   return (
     <>
 
-      <Navbar />
       <AuthProvider>
+      <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
