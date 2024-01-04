@@ -1,133 +1,105 @@
-// import { useState } from "react";
-// import appFirebase from '../../firebase/credentials' 
-// import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth'
-// const auth = getAuth(appFirebase)
+import { useState } from "react"
+import { useAuth } from "../Context/AuthContext";
+import {useNavigate} from 'react-router-dom'
 
-// function Login() {
 
-//     const [register, setRegister] = useState(false);
-//     const funcAtentication = async(e) => {
-//         e.preventDefault()
-//         const email = e.target.email.value;
-//         const password = e.target.password.value;
+export default function Login() {
 
-//         if(register) {
-//             try {
-//                 await createUserWithEmailAndPassword(auth, email, password)
-//             } catch (error) {
-//                 alert("La contraseña tiene que tener mas de 6 caracteres.")
-//             }
+  const [user, setUser] = useState({
+    email: '',
+    password: '',
+  });
 
-//         }else {
-//             try {
-//                 await signInWithEmailAndPassword(auth, email, password)
-//             } catch (error) {
-//                 alert("El correo o la contraseña no son correctas")
-//             }
-//         }
-//     }
+  const { login } = useAuth()
+  const navigate = useNavigate()
+  const [error, setError] = useState()
 
-//     return(
-//         <div>
-//             <h1>Hola mundo</h1>
-//             <form onSubmit={funcAtentication}>
-//                 <input type="text" placeholder="Ingresar email" id="email" />
-//                 <input type="password" placeholder="Ingresar contraseña" id="password" />
-//                 <button>{register ? "Registrate" : "Inicia sesion"}</button>
-//             </form>
-//             <h4>{register ? "Si ya tienes una cuenta" : "No tienes una cuenta"}
-//             <button onClick={()=>setRegister(!register)}>{register ? "Inicia sesion" : "Registrate"}</button>
-//             </h4>
-//         </div>
-//     )
-// }
-// export default Login;
-
-import { useState, useCallback } from "react";
-import appFirebase from '../../firebase/credentials';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-
-const auth = getAuth(appFirebase);
-
-function Login() {
-  const [register, setRegister] = useState(false);
-
-  const funcAtentication = useCallback(
-    async (e) => {
-      e.preventDefault();
-      const email = e.target.email.value;
-      const password = e.target.password.value;
-
-      if (register) {
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-          alert("La contraseña debe tener más de 6 caracteres.");
-        }
-      } else {
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-          alert("El correo o la contraseña no son correctos.");
-        }
+  const handleChange = ({target: {name, value}}) => { //funcion para actualizar el estado.
+    setUser({...user, [name]: value})
+    
+  }
+  const handleSubmit = async (e) => { //funcion para ver que tiene el estado.
+    e.preventDefault()
+    
+    setError('')
+    try {
+       await login(user.email, user.password)
+      navigate('/profile')
+    } catch (error) {
+      if(error.code === 'auth/invalid-email') {
+        setError("Correo invalido")
       }
-    },
-    [register] // Dependencia para useCallback
-  );
-
+      // setError(error.message)
+    }
+    
+  } 
   return (
-    // <div>
-    //   <h1>Hola mundo</h1>
-    //   <form onSubmit={funcAtentication}>
-    //     <input type="text" placeholder="Ingresar email" id="email" />
-    //     <input type="password" placeholder="Ingresar contraseña" id="password" />
-    //     <button>{register ? "Registrate" : "Inicia sesión"}</button>
-    //   </form>
-    //   <h4>
-    //     {register ? "Si ya tienes una cuenta" : "No tienes una cuenta"}
-    //     <button onClick={() => setRegister(!register)}>
-    //       {register ? "Inicia sesión" : "Registrate"}
-    //     </button>
-    //   </h4>
-    // </div>
-    <div class="bg-white flex justify-center items-center h-screen">
-      <div class="w-5/6 h-screen hidden lg:block">
-        <img src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1701960974/Dise%C3%B1o_sin_t%C3%ADtulo__4_-removebg-preview_swsmwt.png" alt="Placeholder Image" class="object-contain w-5/6 h-full" />
-      </div>
-      <div onSubmit={funcAtentication} class="lg:p-36 md:p-52 sm:20 p-8 w-96 lg:w-1/2">
-        <h1 class="text-2xl font-semibold mb-4">Login</h1>
-        <form onSubmit={funcAtentication}>
-          <div class="mb-4">
-            <label for="username" class="block text-gray-600">Username</label>
-            <input type="text" placeholder="Ingresar email" id="email" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" />
-          </div>
+    
+   <div>
+    
+    {error && <p>{error}</p>}
 
-          <div class="mb-4">
-            <label for="password" class="block text-gray-600">Password</label>
-            <input type="password" placeholder="Ingresar contraseña" id="password" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" />
-          </div>
+    <form onSubmit={handleSubmit}>
+      
+      <label htmlFor="email">Email</label>
+      <input type="email" name="email" placeholder="youremail@yourcompany.com"
+      onChange={handleChange} />
 
-          <div class="mb-4 flex items-center">
-            <input type="checkbox" id="remember" name="remember" class="text-blue-500" />
-            <label for="remember" class="text-gray-600 ml-2">Remember Me</label>
-          </div>
+      <label htmlFor="password">Password</label>
+      <input type="password" name="password" id="password"
+      placeholder="*******"
+      onChange={handleChange}
+      />
 
-          <div class="mb-6 text-blue-500">
-            <a href="#" class="hover:underline"></a>
-          </div>
-          {register ? "Registrate" :
-            <button type="submit" class="bg-purple-950 hover:bg-purple-500 text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
-          }
-        </form>
-
-        <div class="mt-6 text-blue-500 text-center">
-          {register ? "Inicia sesión" :
-            <button onClick={() => setRegister(!register)} class="bg-purple-950 hover:bg-purple-500 text-white font-semibold rounded-md py-2 px-4 w-full"> Registrate</button>
-          }
-        </div>
-      </div>
-    </div>
-  );
+      <button>Login</button>
+    </form>
+   </div>
+  )
 }
 
-export default Login;
+
+//   return (
+  
+//     <div className="bg-white flex justify-center items-center h-screen">
+//       <div className="w-5/6 h-screen hidden lg:block">
+//         <img src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1701960974/Dise%C3%B1o_sin_t%C3%ADtulo__4_-removebg-preview_swsmwt.png" alt="Placeholder Image" className="object-contain w-5/6 h-full" />
+//       </div>
+//       <div onSubmit={funcAtentication} className="lg:p-36 md:p-52 sm:20 p-8 w-96 lg:w-1/2">
+//         <h1 className="text-2xl font-semibold mb-4">Login</h1>
+//         <form onSubmit={funcAtentication}>
+//           <div className="mb-4">
+//             <label htmlFor="username" className="block text-gray-600">Username</label>
+//             <input type="text" placeholder="Ingresar email" id="email" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autoComplete="off" />
+//           </div>
+
+//           <div className="mb-4">
+//             <label htmlFor="password" className="block text-gray-600">Password</label>
+//             <input type="password" placeholder="Ingresar contraseña" id="password" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autoComplete="off" />
+//           </div>
+
+//           <div className="mb-4 flex items-center">
+//             <input type="checkbox" id="remember" name="remember" className="text-blue-500" />
+//             <label htmlFor="remember" className="text-gray-600 ml-2">Remember Me</label>
+//           </div>
+
+//           <div className="mb-6 text-blue-500">
+//             <a href="#" className="hover:underline"></a>
+//           </div>
+//           {register ? "Registrate" :
+//             <button type="submit" className="bg-purple-950 hover:bg-purple-500 text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
+//           }
+//         </form>
+
+//         <div className="mt-6 text-blue-500 text-center">
+//           {register ? "Inicia sesión" :
+//           <Link to="/modal">
+//             <button onClick={() => setRegister(!register)} className="bg-purple-950 hover:bg-purple-500 text-white font-semibold rounded-md py-2 px-4 w-full"> Registrate</button>
+//             </Link>
+//           }
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+

@@ -1,26 +1,26 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Link } from 'react-router-dom'
 import Styles from "./Landing.module.css"
-import Profile from '../Profile/Profile'
-import appFirebase from '../../firebase/credentials'
+// import appFirebase from '../../firebase/credentials'
 import { useState } from 'react';
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
 
-const auth = getAuth(appFirebase)
+// const auth = getAuth(appFirebase)
 
 
 function Landing() {
 
-    const [user, setUser] = useState(null)
+    // const [user, setUser] = useState(null)
 
-    onAuthStateChanged(auth, (userFirebase) => {
-     if(userFirebase){
-       setUser(userFirebase)
+    // onAuthStateChanged(auth, (userFirebase) => {
+    //  if(userFirebase){
+    //    setUser(userFirebase)
   
-       } else{
-        setUser(null)
-       } 
-    })
+    //    } else{
+    //     setUser(null)
+    //    } 
+    // })
 
     return (
         <div className="w-full h-screen flex flex-col lg:flex-row items-center justify-center bg-violet-800 space-y-16 lg:space-y-0 space-x-8 2xl:space-x-0">
@@ -35,11 +35,11 @@ function Landing() {
                     Descubre la libertad de una vida organizada y financieramente saludable. ¿Demasiadas tareas en tu lista y
                     gastos que parecen escaparse de control? Organizate tiene la solución que necesitas.
                 </p>
-                {user ? <Profile correoUsuario={user.email} /> :
+                {/* {user ? <Profile correoUsuario={user.email} /> :
                     <Link to="/login" className="block bg-indigo-900 hover:bg-indigo-600 rounded-lg shadow text-center text-white text-sm md:text-base lg:text-lg font-semibold w-full sm:w-full md:w-2/3 lg:w-1/2 py-2 sm:py-2 md:py-3 lg:py-4 mt-9">
                         Login now!
                     </Link>
-                }
+                } */}
 
             </div>
             <div className="w-1/2 lg:h-full flex lg:items-end justify-center p-4">
