@@ -3,6 +3,7 @@ import Landing from "./Components/Landing/Landing";
 import Login from './Components/Login/Login'
 import Profile from './Components/Profile/Profile'
 import Footer from './Components/Footer/Footer';
+import Navbar from './Components/Navbar/Navbar';
 
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
 
   return (
     <>
+    <Navbar />
       <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
