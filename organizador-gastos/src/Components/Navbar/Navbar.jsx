@@ -1,6 +1,8 @@
 import React from 'react'
 
 function Navbar() {
+
+    
   return (
     <nav id="header" class="w-full z-30 py-1 bg-violet-500 shadow-lg border-b border-blue-400">
       <div class="w-full flex items-center justify-between mt-0 px-6 py-2">
