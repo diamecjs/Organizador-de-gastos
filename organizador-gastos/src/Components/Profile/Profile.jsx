@@ -1,16 +1,25 @@
-/* eslint-disable react/prop-types */
-import appFirebase from '../../firebase/credentials'
-import { getAuth, signOut } from 'firebase/auth'
+import { useAuth } from "../Context/AuthContext"
+import { useNavigate } from 'react-router-dom'
 
-const auth = getAuth(appFirebase)
 
-function Profile({correoUsuario}) {
+export function Profile() {
+    
+    const {user, logout, loading} = useAuth()
+    const navigate = useNavigate()
+
+    console.log(user)
+    const handleLogout = async () => {
+        await logout()
+        navigate('/')
+    }
+    if (loading) return <h1>Loading</h1>
 
     return (
         <div>
-            <h1>Bienvenido {correoUsuario}</h1>
-            <button onClick={()=> signOut(auth)}>Logout</button>
+            <h1>Bienvenido {user.email}</h1>
+            <button onClick={handleLogout}>
+                Logout
+            </button>
         </div>
     )
 }
-export default Profile
