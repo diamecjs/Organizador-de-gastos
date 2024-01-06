@@ -1,9 +1,20 @@
 import React from 'react'
-import { useAuth } from '../Context/AuthContext';
+import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from 'react-router-dom';
+
 
 function Navbar() {
 
-    const { user, logout } = useAuth();
+    const { user, logout, loading } = useAuth();
+    const navigate = useNavigate();
+
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
+    }
+
+    if (loading) return <h1>Loading</h1>;
 
     return (
         <nav id="header" class="w-full z-30 py-1 bg-violet-500 shadow-lg border-b border-blue-400">
@@ -26,7 +37,7 @@ function Navbar() {
                             {user ? (
                                 <>
                                     <li>
-                                        <a className="inline-block no-underline hover:text-slate-600 font-medium text-lg py-2 px-4 lg:-ml-2" href="#">
+                                        <a className="inline-block no-underline hover:text-slate-600 font-medium text-lg py-2 px-4 lg:-ml-2" href="/profile">
                                             Mi cuenta
                                         </a>
                                     </li>
@@ -46,7 +57,7 @@ function Navbar() {
                                         </a>
                                     </li>
                                 </>
-                            ): null}
+                            ) : null}
                         </ul>
                     </nav>
                 </div>
@@ -56,6 +67,11 @@ function Navbar() {
                     <div class="auth flex items-center w-full md:w-full">
                         {!user ? (
                             <button class="bg-violet-700 text-white bold w-40  p-2 rounded border border-gray-300 mr-4 hover:bg-purple-500 hover:text-gray-700">Sign in</button>
+                        ) : null}
+                    </div>
+                    <div class="auth flex items-center w-full md:w-full">
+                        {user ? (
+                            <button onClick={handleLogout} class="bg-violet-700 text-white bold w-40  p-2 rounded border border-gray-300 mr-4 hover:bg-purple-500 hover:text-gray-700">Logout</button>
                         ) : null}
                     </div>
                 </div>
