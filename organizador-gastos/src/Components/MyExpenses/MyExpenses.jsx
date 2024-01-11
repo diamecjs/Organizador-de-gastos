@@ -64,17 +64,19 @@ function MyExpenses() {
                       </div>
                     </div>
                   </td>
-                  <td className="p-3">Detalle</td>
+                  <td className="p-3">{expense?.detail}</td>
                   <td className="p-3 font-bold">{expense?.amount}</td>
                   <td
                     className="p-3 font-bold cursor-pointer"
                     onClick={() => openImageModal(expense?.image)}
                   >
-                    <img
-                      className="rounded h-12 w-12 object-cover"
-                      src={expense?.image}
-                      alt="image"
-                    />
+                    {expense?.image && (
+                      <img
+                        className="rounded h-12 w-12 object-cover"
+                        src={expense?.image}
+                        alt="image"
+                      />
+                    )}
                   </td>
                 </tr>
               ))}
