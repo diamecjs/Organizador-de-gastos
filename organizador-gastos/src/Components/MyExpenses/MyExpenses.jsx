@@ -37,9 +37,14 @@ function MyExpenses() {
   };
 
   useEffect(() => {
-    dispatch(getExpenses());
-    calculateTotalAmount();
+    const fetchData = async () => {
+      dispatch(getExpenses());
+      calculateTotalAmount();
+    };
+
+    fetchData();
   }, [dispatch]);
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-indigo-950">
@@ -60,7 +65,6 @@ function MyExpenses() {
                 <th className="p-3 ">Detalle</th>
                 <th className="p-3 ">Monto</th>
                 <th className="p-3 ">Imagen</th>
-                
               </tr>
             </thead>
             <tbody>
@@ -74,15 +78,16 @@ function MyExpenses() {
                     </div>
                   </td>
                   <td className="p-3">{expense?.detail}</td>
-                  <td className="p-3 font-bold cursor-pointer flex items-center justify-center">
+                  <td className="p-3 font-bold cursor-pointer" onClick={() => openImageModal(expense?.image)}>
                     {expense?.image && (
                       <img
-                        className="rounded h-12 w-12 object-cover"
+                        className="rounded h-12 w-12 object-cover cursor-pointer"
                         src={expense?.image}
                         alt="image"
                       />
                     )}
                   </td>
+
                   <td className="p-3 font-bold">{expense?.amount}</td>
 
                 </tr>
