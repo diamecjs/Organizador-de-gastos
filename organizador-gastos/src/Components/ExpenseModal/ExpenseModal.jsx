@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { postExpenses } from "../../Redux/Expenses/expensesActions";
+import Swal from "sweetalert2";
 
 
 
@@ -29,7 +30,7 @@ function ExpenseModal({ onClose }) {
     const handleUploadFile = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
-    
+
         reader.onloadend = () => {
             setExpenseData((prevData) => ({
                 ...prevData,
@@ -37,35 +38,48 @@ function ExpenseModal({ onClose }) {
             }));
             setThumbnail(reader.result);
         };
-    
+
         if (file) {
             reader.readAsDataURL(file);
         }
     };
-    
+
 
 
     const handleAddExpense = async () => {
         try {
             setLoading(true);
 
-            await dispatch(postExpenses({
+            const expensePayload = {
                 name: expenseData.name,
                 detail: expenseData.detail,
                 amount: expenseData.amount,
-                image: expenseData.image,
-            }));
+            };
+
+            if (expenseData.image) {
+                expensePayload.image = expenseData.image;
+            }
+
+            await dispatch(postExpenses(expensePayload));
 
             setSuccess(true);
+            Swal.fire(
+                '¡Gasto Agregado!',
+                'Gasto creado correctamente.',
+                'success'
+            );
         } catch (error) {
             console.error("Error adding expense:", error);
             setSuccess(false);
         } finally {
             setLoading(false);
             onClose();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
     };
-
     return (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-75">
             <div className="bg-white p-8 rounded-md">
@@ -90,8 +104,7 @@ function ExpenseModal({ onClose }) {
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700">Detalle:</label>
-                    <input
-                        type="text"
+                    <textarea
                         name="detail"
                         value={expenseData.detail}
                         onChange={handleInputChange}
@@ -110,7 +123,7 @@ function ExpenseModal({ onClose }) {
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700">Imagen:</label>
-             
+
                     <input
                         id="image"
                         type="file"
@@ -118,7 +131,7 @@ function ExpenseModal({ onClose }) {
                         onChange={handleUploadFile}
                         className="w-full border border-gray-300 p-2 rounded"
                     />
-                     <img id="preview-image" alt="Vista previa de imagen" src={expenseData.image} className="w-20 h-20" />
+                    <img id="preview-image" alt="Vista previa de imagen" src={expenseData.image} className="w-20 h-20" />
                 </div>
                 <button
                     onClick={handleAddExpense}
