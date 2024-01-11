@@ -1,6 +1,7 @@
-import React, { useState} from "react";
-import { useDispatch } from "react-redux";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { postExpenses } from "../../Redux/Expenses/expensesActions";
+
 
 
 function ExpenseModal({ onClose }) {
@@ -25,38 +26,24 @@ function ExpenseModal({ onClose }) {
         }));
     };
 
-    const uploadImage = async (e) => {
-        const files = e.target.files;
-        const data = new FormData();
-        data.append("file", files[0]);
-        data.append("upload_preset", "Donde-Suena-Events");
-        setLoading(true);
-
-        try {
-            const res = await axios.post(
-                "https://api.cloudinary.com/v1_1/ds41xxspf/image/upload",
-                data
-            );
-            if (res.data.secure_url) {
-                setSuccess(true);
-                setImage(res.data.secure_url);
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    setThumbnail(e.target.result);
-                };
-                reader.readAsDataURL(files[0]);
-            } else {
-                setSuccess(false);
-                setImage('');
-            }
-        } catch (error) {
-            console.error("Error uploading image:", error);
-            setSuccess(false);
-            setImage('');
-        } finally {
-            setLoading(false);
+    const handleUploadFile = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+    
+        reader.onloadend = () => {
+            setExpenseData((prevData) => ({
+                ...prevData,
+                image: reader.result,
+            }));
+            setThumbnail(reader.result);
+        };
+    
+        if (file) {
+            reader.readAsDataURL(file);
         }
     };
+    
+
 
     const handleAddExpense = async () => {
         try {
@@ -66,7 +53,7 @@ function ExpenseModal({ onClose }) {
                 name: expenseData.name,
                 detail: expenseData.detail,
                 amount: expenseData.amount,
-                image: image,
+                image: expenseData.image,
             }));
 
             setSuccess(true);
@@ -123,34 +110,15 @@ function ExpenseModal({ onClose }) {
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700">Imagen:</label>
-                    <label
-                        htmlFor="image"
-                        className="block text-gray-700"
-                    >
-                        {loading ? (
-                            <span className="block text-gray-700">
-                                (Subiendo Imágen...)
-                            </span>
-                        ) : success ? (
-                            <span className="block text-gray-700">
-                                (Imágen subida con éxito)
-                            </span>
-                        ) : null}
-                    </label>
-                    {thumbnail && (
-                        <img
-                            src={thumbnail}
-                            alt="Vista previa en miniatura"
-                            className="mt-2 mb-2 w-24 h-auto"
-                        />
-                    )}
+             
                     <input
                         id="image"
                         type="file"
-                        accept="image/png, image/jpeg, image/jpg"
-                        onChange={uploadImage}
+                        accept=".jpg,.png,.jpeg"
+                        onChange={handleUploadFile}
                         className="w-full border border-gray-300 p-2 rounded"
                     />
+                     <img id="preview-image" alt="Vista previa de imagen" src={expenseData.image} className="w-20 h-20" />
                 </div>
                 <button
                     onClick={handleAddExpense}
