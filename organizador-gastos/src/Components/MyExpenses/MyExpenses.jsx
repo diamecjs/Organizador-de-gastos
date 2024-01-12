@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ExpenseModal from '../ExpenseModal/ExpenseModal';
-import ImageModal from '../ImageModal/ImageModal'; // Asegúrate de importar el nuevo componente
+import ImageModal from '../ImageModal/ImageModal';
 import { getExpenses } from '../../Redux/Expenses/expensesActions';
 
 function MyExpenses() {
@@ -11,13 +11,16 @@ function MyExpenses() {
   const [selectedImage, setSelectedImage] = useState('');
   const { expenses } = useSelector((state) => state?.expenses);
 
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(() => {
+    const storedTotalAmount = localStorage.getItem('totalAmount');
+    return storedTotalAmount ? parseFloat(storedTotalAmount) : 0;
+  });
 
   const calculateTotalAmount = () => {
     const sum = expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0);
     setTotalAmount(sum);
+    localStorage.setItem('totalAmount', sum.toString());
   };
-
 
   const openExpenseModal = () => {
     setIsExpenseModalOpen(true);
@@ -38,12 +41,12 @@ function MyExpenses() {
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(getExpenses());
+      await dispatch(getExpenses());
       calculateTotalAmount();
     };
 
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, expenses]);
 
 
   return (
