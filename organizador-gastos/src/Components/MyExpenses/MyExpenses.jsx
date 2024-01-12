@@ -2,13 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ExpenseModal from '../ExpenseModal/ExpenseModal';
 import ImageModal from '../ImageModal/ImageModal';
-import { getExpenses } from '../../Redux/Expenses/expensesActions';
+import { getExpenses, Delete } from '../../Redux/Expenses/expensesActions';
+import Swal from "sweetalert2";
+import ModalEdit from '../ModalEdit/ModalEdit';
+
 
 function MyExpenses() {
   const dispatch = useDispatch();
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+
   const { expenses } = useSelector((state) => state?.expenses);
 
   const [totalAmount, setTotalAmount] = useState(() => {
@@ -39,6 +45,16 @@ function MyExpenses() {
     setIsImageModalOpen(false);
   };
 
+  const openEditModal = (expense) => {
+    setSelectedExpense(expense);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedExpense(null);
+    setIsEditModalOpen(false);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(getExpenses());
@@ -47,6 +63,13 @@ function MyExpenses() {
 
     fetchData();
   }, [dispatch, expenses]);
+
+  const handleDelete = (id) => {
+    dispatch(Delete(id));
+    Swal.fire("¡Borrado!", "Gasto eliminado", "success").then(() => {
+      window.location.reload();
+    });
+  };
 
 
   return (
@@ -66,8 +89,8 @@ function MyExpenses() {
               <tr>
                 <th className="p-3">Gasto</th>
                 <th className="p-3 ">Detalle</th>
-                <th className="p-3 ">Monto</th>
                 <th className="p-3 ">Imagen</th>
+                <th className="p-3 ">Monto</th>
               </tr>
             </thead>
             <tbody>
@@ -91,7 +114,14 @@ function MyExpenses() {
                     )}
                   </td>
 
-                  <td className="p-3 font-bold">{expense?.amount}</td>
+                  <td className="p-3 font-bold">{expense?.amount}
+                    <div className="flex items-center justify-center mt-2">
+                    <img className="m-4 cursor-pointer"  onClick={() => openEditModal(expense)} width="30" height="30" src="https://cdn.icon-icons.com/icons2/841/PNG/512/flat-style-circle-edit_icon-icons.com_66939.png" alt="edit"/>
+                      <img className="m-4 cursor-pointer" width="30" height="30" src="https://cdn.icon-icons.com/icons2/1880/PNG/512/iconfinder-trash-4341321_120557.png" alt="delete" 
+                        onClick={() => handleDelete(expense.id)} />
+                      
+                    </div>
+                  </td>
 
                 </tr>
               ))}
@@ -111,6 +141,16 @@ function MyExpenses() {
       </div>
       {isExpenseModalOpen && <ExpenseModal onClose={closeExpenseModal} />}
       {isImageModalOpen && <ImageModal imageUrl={selectedImage} onClose={closeImageModal} />}
+      {isEditModalOpen && (
+        <ModalEdit
+          expense={selectedExpense}
+          onSave={(editedExpense) => {
+            console.log('Guardar cambios:', editedExpense);
+            closeEditModal();
+          }}
+          onCancel={closeEditModal}
+        />
+      )}
     </div>
   );
 }
