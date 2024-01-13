@@ -50,7 +50,7 @@ function Navbar() {
                                         </a>
                                     </li>
                                     <li>
-                                        <a className="inline-block no-underline hover:text-slate-600 font-medium text-lg py-2 px-4 lg:-ml-2" href="#">
+                                        <a className="inline-block no-underline hover:text-slate-600 font-medium text-lg py-2 px-4 lg:-ml-2" href="/saving">
                                             Chanchita! $$
                                         </a>
                                     </li>
