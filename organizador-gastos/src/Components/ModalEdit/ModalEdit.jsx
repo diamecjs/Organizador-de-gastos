@@ -1,28 +1,21 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { postExpenses } from "../../Redux/Expenses/expensesActions";
-import Swal from "sweetalert2";
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { updatedExpenses } from '../../Redux/Expenses/expensesActions';
 
 
-
-function ExpenseModal({ onClose }) {
+const ModalEdit = ({ expense, onSave, onCancel }) => {
 
     const dispatch = useDispatch();
-    const [loading, setLoading] = useState("");
-    const [success, setSuccess] = useState(false);
-    const [image, setImage] = useState('');
-    const [thumbnail, setThumbnail] = useState('');
-    const [expenseData, setExpenseData] = useState({
-        name: '',
-        detail: '',
-        amount: '',
-        image: '',
-    });
+    const [editedExpense, setEditedExpense] = useState({ ...expense });
+
+    useEffect(() => {
+        setEditedExpense({ ...expense });
+    }, [expense]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setExpenseData((prevData) => ({
-            ...prevData,
+        setEditedExpense((prevExpense) => ({
+            ...prevExpense,
             [name]: value,
         }));
     };
@@ -32,11 +25,10 @@ function ExpenseModal({ onClose }) {
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            setExpenseData((prevData) => ({
+            setEditedExpense((prevData) => ({
                 ...prevData,
                 image: reader.result,
             }));
-            setThumbnail(reader.result);
         };
 
         if (file) {
@@ -44,60 +36,28 @@ function ExpenseModal({ onClose }) {
         }
     };
 
-
-
-    const handleAddExpense = async () => {
-        try {
-            setLoading(true);
-
-            const expensePayload = {
-                name: expenseData.name,
-                detail: expenseData.detail,
-                amount: expenseData.amount,
-            };
-
-            if (expenseData.image) {
-                expensePayload.image = expenseData.image;
-            }
-
-            await dispatch(postExpenses(expensePayload));
-
-            setSuccess(true);
-            Swal.fire(
-                '¡Gasto Agregado!',
-                'Gasto creado correctamente.',
-                'success'
-            );
-        } catch (error) {
-            console.error("Error adding expense:", error);
-            setSuccess(false);
-        } finally {
-            setLoading(false);
-            onClose();
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        }
+    const handleSave = () => {
+        dispatch(updatedExpenses(editedExpense, () => onCancel()));
+        console.log("editedExpense after save:", editedExpense);
     };
+    
+      
+
     return (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-75">
-            <div className="bg-violet-500 p-8 rounded-md">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-75 z-10">
+            <div className="bg-violet-500 p-8 rounded-md w-96 ">
                 <div className="flex justify-end">
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700"
-                    >
+                    <button onClick={onCancel} className="text-gray-500 hover:text-gray-700">
                         ❌
                     </button>
                 </div>
-                <h2 className="text-2xl text-white font-bold mb-4">Agregar Nuevo Gasto</h2>
+                <h2 className="text-2xl text-white font-bold mb-4">Editar Gasto</h2>
                 <div className="mb-4">
                     <label className="block text-indigo-950">Nombre:</label>
                     <input
                         type="text"
                         name="name"
-                        value={expenseData.name}
+                        value={editedExpense.name}
                         onChange={handleInputChange}
                         className="w-full border border-gray-300 p-2 rounded"
                     />
@@ -106,7 +66,7 @@ function ExpenseModal({ onClose }) {
                     <label className="block text-indigo-950">Detalle:</label>
                     <textarea
                         name="detail"
-                        value={expenseData.detail}
+                        value={editedExpense.detail}
                         onChange={handleInputChange}
                         className="w-full border border-gray-300 p-2 rounded"
                     />
@@ -116,14 +76,13 @@ function ExpenseModal({ onClose }) {
                     <input
                         type="text"
                         name="amount"
-                        value={expenseData.amount}
+                        value={editedExpense.amount}
                         onChange={handleInputChange}
                         className="w-full border border-gray-300 p-2 rounded"
                     />
                 </div>
                 <div className="mb-4">
                     <label className="block text-indigo-950">Imagen:</label>
-
                     <input
                         id="image"
                         type="file"
@@ -131,26 +90,25 @@ function ExpenseModal({ onClose }) {
                         onChange={handleUploadFile}
                         className="w-full border border-gray-300 p-2 rounded"
                     />
-
-                    {expenseData.image && (
+                    {editedExpense.image && (
                         <img
                             id="preview-image"
                             alt="Vista previa de imagen"
-                            src={expenseData.image}
+                            src={editedExpense.image}
                             className="w-20 h-20 mt-2"
                         />
                     )}
                 </div>
 
                 <button
-                    onClick={handleAddExpense}
+                    onClick={handleSave}
                     className="bg-indigo-950 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
                 >
-                    Agregar Gasto
+                    Guardar Cambios
                 </button>
             </div>
         </div>
     );
-}
+};
 
-export default ExpenseModal;
+export default ModalEdit;
