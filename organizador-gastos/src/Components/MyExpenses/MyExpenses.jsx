@@ -8,7 +8,9 @@ import ModalEdit from '../ModalEdit/ModalEdit';
 
 
 function MyExpenses() {
-  const dispatch = useDispatch();
+   const dispatch = useDispatch();
+  const { expenses } = useSelector((state) => state?.expenses);
+
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
@@ -16,52 +18,47 @@ function MyExpenses() {
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { expenses } = useSelector((state) => state?.expenses);
-
-  const [totalAmount, setTotalAmount] = useState(() => {
-    const storedTotalAmount = localStorage.getItem('totalAmount');
-    return storedTotalAmount ? parseFloat(storedTotalAmount) : 0;
-  });
-
-  const calculateTotalAmount = () => {
-    const sum = expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0);
-    setTotalAmount(sum);
-    localStorage.setItem('totalAmount', sum.toString());
-    if (expenseLimit > 0 && sum >= expenseLimit) {
-      useEffect(() => {
-        Swal.fire({
-          icon: 'warning',
-          title: '¡Alerta!',
-          text: 'Has alcanzado o superado el límite de gastos.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok',
-        });
-      }, []);
-    }
-  };
-
+  const [totalAmount, setTotalAmount] = useState(0);
   const [expenseLimit, setExpenseLimit] = useState(() => {
     const storedExpenseLimit = localStorage.getItem('expenseLimit');
     return storedExpenseLimit ? parseFloat(storedExpenseLimit) : 0;
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(getExpenses());
+    };
 
-  const openExpenseModal = () => {
-    setIsExpenseModalOpen(true);
-  };
+    fetchData();
+  }, [dispatch]);
 
-  const closeExpenseModal = () => {
-    setIsExpenseModalOpen(false);
-  };
+  useEffect(() => {
+    const sum = expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0);
+    setTotalAmount(sum);
+    localStorage.setItem('totalAmount', sum.toString());
+  }, [expenses]);
+
+  useEffect(() => {
+    if (expenseLimit > 0 && totalAmount >= expenseLimit) {
+      Swal.fire({
+        icon: 'warning',
+        title: '¡Alerta!',
+        text: 'Has alcanzado o superado el límite de gastos.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok',
+      });
+    }
+  }, [totalAmount, expenseLimit]);
+
+  const openExpenseModal = () => setIsExpenseModalOpen(true);
+  const closeExpenseModal = () => setIsExpenseModalOpen(false);
 
   const openImageModal = (imageUrl) => {
     setSelectedImage(imageUrl);
     setIsImageModalOpen(true);
   };
 
-  const closeImageModal = () => {
-    setIsImageModalOpen(false);
-  };
+  const closeImageModal = () => setIsImageModalOpen(false);
 
   const openEditModal = (expense) => {
     setSelectedExpense(expense);
@@ -73,29 +70,24 @@ function MyExpenses() {
     setIsEditModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getExpenses());
-      calculateTotalAmount();
-    };
-
-    fetchData();
-  }, [dispatch, expenses]);
-
   const handleDelete = (id) => {
     dispatch(Delete(id));
-    Swal.fire("¡Borrado!", "Gasto eliminado", "success").then(() => {
+    Swal.fire({
+      title: '¡Borrado!',
+      text: 'Gasto eliminado',
+      icon: 'success',
+    }).then(() => {
       window.location.reload();
     });
   };
 
   const handleSaveLimitClick = () => {
     localStorage.setItem('expenseLimit', expenseLimit.toString());
-    setIsEditing(false); 
+    setIsEditModalOpen(false);
   };
 
   const handleEditLimitClick = () => {
-    setIsEditing(true);
+    setIsEditModalOpen(true);
   };
 
 
