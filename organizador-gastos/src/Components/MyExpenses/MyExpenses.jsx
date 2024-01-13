@@ -14,6 +14,7 @@ function MyExpenses() {
   const [selectedImage, setSelectedImage] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const { expenses } = useSelector((state) => state?.expenses);
 
@@ -26,7 +27,24 @@ function MyExpenses() {
     const sum = expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0);
     setTotalAmount(sum);
     localStorage.setItem('totalAmount', sum.toString());
+    if (expenseLimit > 0 && sum >= expenseLimit) {
+      useEffect(() => {
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Alerta!',
+          text: 'Has alcanzado o superado el límite de gastos.',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok',
+        });
+      }, []);
+    }
   };
+
+  const [expenseLimit, setExpenseLimit] = useState(() => {
+    const storedExpenseLimit = localStorage.getItem('expenseLimit');
+    return storedExpenseLimit ? parseFloat(storedExpenseLimit) : 0;
+  });
+
 
   const openExpenseModal = () => {
     setIsExpenseModalOpen(true);
@@ -71,11 +89,50 @@ function MyExpenses() {
     });
   };
 
+  const handleSaveLimitClick = () => {
+    localStorage.setItem('expenseLimit', expenseLimit.toString());
+    setIsEditing(false); 
+  };
+
+  const handleEditLimitClick = () => {
+    setIsEditing(true);
+  };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-indigo-950">
-      <div className="col-span-12 w-full p-5">
+
+      <div className="col-span-12 w-full p-5 ">
+        <label className="text-teal-500 font-bold ">Límite de gastos:</label>
+        {isEditing ? (
+          <>
+            <input
+              type="number"
+              value={expenseLimit}
+              onChange={(e) => setExpenseLimit(parseFloat(e.target.value))}
+              className="rounded-lg border border-gray-300 text-gray-700 p-2 w-48"
+            />
+            <button
+              type="button"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-3 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={handleSaveLimitClick}
+            >
+              ✅
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="text-white font-bold ">${expenseLimit}</p>
+            <button
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-3 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={handleEditLimitClick}
+            >
+             $ 🪙
+            </button>
+          </>
+        )}
         <div className="flex justify-end mb-4">
+
           <button
             onClick={openExpenseModal}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -116,10 +173,10 @@ function MyExpenses() {
 
                   <td className="p-3 font-bold">{expense?.amount}
                     <div className="flex items-center justify-center mt-2">
-                    <img className="m-4 cursor-pointer"  onClick={() => openEditModal(expense)} width="30" height="30" src="https://cdn.icon-icons.com/icons2/841/PNG/512/flat-style-circle-edit_icon-icons.com_66939.png" alt="edit"/>
-                      <img className="m-4 cursor-pointer" width="30" height="30" src="https://cdn.icon-icons.com/icons2/1880/PNG/512/iconfinder-trash-4341321_120557.png" alt="delete" 
+                      <img className="m-4 cursor-pointer" onClick={() => openEditModal(expense)} width="30" height="30" src="https://cdn.icon-icons.com/icons2/841/PNG/512/flat-style-circle-edit_icon-icons.com_66939.png" alt="edit" />
+                      <img className="m-4 cursor-pointer" width="30" height="30" src="https://cdn.icon-icons.com/icons2/1880/PNG/512/iconfinder-trash-4341321_120557.png" alt="delete"
                         onClick={() => handleDelete(expense.id)} />
-                      
+
                     </div>
                   </td>
 

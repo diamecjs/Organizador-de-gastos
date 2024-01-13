@@ -7,6 +7,7 @@ import Navbar from './Components/Navbar/Navbar';
 import Register from './Components/Register/Register'
 import { AuthProvider } from './Components/Context/AuthContext';
 import MyExpenses from './Components/MyExpenses/MyExpenses';
+import MySaving from './Components/MySaving/MySaving';
 
 
 
@@ -20,6 +21,7 @@ function App() {
       <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/saving" element={<MySaving />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
