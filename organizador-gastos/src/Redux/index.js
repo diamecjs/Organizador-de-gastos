@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import expensesSlices from "./Expenses/expensesSlices";
-import userSlice from "./Register/userSlice";
+import userSlice from "./User/userSlice";
 import savingSlices from "./Saving/savingSlices";
 
 const rootReducer = {

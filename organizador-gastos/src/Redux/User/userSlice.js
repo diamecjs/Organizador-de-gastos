@@ -12,8 +12,11 @@ const userSlice = createSlice({
     addusers: (state, action) => {
       state.user.push(action.payload);
     },
+    getUserForId: (state, action) => {
+      state.user = action.payload;
+    },
   },
 });
 
-export const { getAllUsers, addusers } = userSlice.actions;
+export const { getAllUsers, addusers, getUserForId } = userSlice.actions;
 export default userSlice.reducer;

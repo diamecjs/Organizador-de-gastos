@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addusers, getAllUsers } from "./userSlice";
+import { addusers, getAllUsers, getUserForId } from "./userSlice";
 
 export const postUser = (value) => (dispatch) => {
   axios
@@ -13,4 +13,10 @@ export const getUsers = () => (dispatch) => {
     .get("http://localhost:3001/users")
     .then((res) => dispatch(getAllUsers(res.data.user)))
     .catch((e) => console.log(e, "Rompo en ACTION GETUSER"));
+};
+export const getUserId = (id) => (dispatch) => {
+  axios
+    .get(`http://localhost:3001/users/${id}`)
+    .then((res) => dispatch(getUserForId(res.data)))
+    .catch((e) => console.log(e, "Rompo en GETUSERID"));
 };

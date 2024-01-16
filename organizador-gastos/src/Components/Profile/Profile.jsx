@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../Context/AuthContext";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserId } from '../../Redux/User/user.Actions'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-export function Profile() {
+export function Profile({id, firstName, lastName, email, birthday, income}) {
 
-    const { user } = useAuth();
+    const currentUsers = useSelector((state) => state?.user)
+    const dispatch = useDispatch()
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [userPhrase, setUserPhrase] = useState("Frase predeterminada");
     const [isEditing, setIsEditing] = useState(false);
@@ -14,8 +16,9 @@ export function Profile() {
         const storedPhrase = localStorage.getItem("userPhrase");
         if (storedPhrase) {
             setUserPhrase(storedPhrase);
+            dispatch(getUserId(id))
         }
-    }, []);
+    }, [dispatch]);
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -38,8 +41,9 @@ export function Profile() {
                             src="https://avatars.githubusercontent.com/u/65394410?v=4"
                         />
                         <div>
-                            <p className="text-lg pb-5 font-bold text-teal-700">Nombre de usuario</p>
-                            <p className="pb-3 font-extralight">{user?.email}</p>
+                            
+                            <p className="text-lg pb-5 font-bold text-teal-700">{firstName}</p>
+                            <p className="pb-3 font-extralight">{email}</p>
                             <div className="font-bold">
                                 {isEditing ? (
                                     <>
@@ -49,7 +53,7 @@ export function Profile() {
                                             value={userPhrase}
                                             onChange={(e) => setUserPhrase(e.target.value)}
                                         />
-                                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-3 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleSaveClick}>💾</button>
+                                        <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-3 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleSaveClick}>💾</button>
                                            
                                 
                                         </>
@@ -68,11 +72,11 @@ export function Profile() {
                             <div className="w-full flex-col space-y-1 text-gray-500 text-sm">
                                 <div className="flex items-center pb-8 space-x-1">
                                     <img className="w-10 h-10" src="https://cdn.icon-icons.com/icons2/2512/PNG/512/birthday_party_decoration_fun_event_happiness_cake_icon_150835.png" />
-                                    <p className="font-bold text-gray-100">CUMPLEAÑOS:</p>
+                                    <p className="font-bold text-gray-100">CUMPLEAÑOS: {birthday}</p>
                                 </div>
                                 <div className="flex items-center pb-8 space-x-1">
                                     <img className="w-10 h-10" src="https://cdn.icon-icons.com/icons2/606/PNG/512/dollar-coin-money_icon-icons.com_56177.png" />
-                                    <p className="font-bold text-gray-100">INGRESOS:</p>
+                                    <p className="font-bold text-gray-100">INGRESOS: {income}</p>
                                 </div>
                                 <div className="flex items-center space-x-1">
                                     <img className="w-10 h-10" src="https://res.cloudinary.com/dsjsbp6qy/image/upload/v1704486172/icons8-piggy-bank-64_s6amu3.png" />
